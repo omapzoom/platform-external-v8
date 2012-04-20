@@ -73,7 +73,13 @@ void Deoptimizer::DeoptimizeFunction(JSFunction* function) {
     int deoptimization_index = safepoint_entry.deoptimization_index();
     int gap_code_size = safepoint_entry.gap_code_size();
     // Check that we did not shoot past next safepoint.
+#ifdef OMAP_ENHANCEMENT
+    if (pc_offset < last_pc_offset) {
+        return;
+    }
+#else
     CHECK(pc_offset >= last_pc_offset);
+#endif
 #ifdef DEBUG
     // Destroy the code which is not supposed to be run again.
     int instructions = (pc_offset - last_pc_offset) / Assembler::kInstrSize;
